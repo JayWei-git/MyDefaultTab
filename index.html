@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>New Tab</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="bg-layer-0" class="bg-layer is-active">
+        <video loop muted playsinline></video>
+        <img alt="" />
+    </div>
+
+    <div id="bg-layer-1" class="bg-layer">
+        <video loop muted playsinline></video>
+        <img alt="" />
+    </div>
+
+
+    <!-- Main Content -->
+    <div class="container">
+        <div id="categories-container" class="categories-grid"></div>
+    </div>
+
+
+    <!-- Unified Edit Modal -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal-box">
+
+            <h3 id="modal-title">
+                Manage Node
+            </h3>
+
+            <div class="modal-body">
+
+                <!-- Site Item Form -->
+                <div id="form-site-group" class="form-group">
+                    <label for="input-site-name">
+                        Name
+                    </label>
+
+                    <input type="text" id="input-site-name" placeholder="e.g., GitHub" autocomplete="off">
+
+                    <label for="input-site-url">
+                        URL
+                    </label>
+
+                    <input type="text" id="input-site-url" placeholder="https://github.com" autocomplete="off">
+                </div>
+
+
+                <!-- Category Form -->
+                <div id="form-category-group" class="form-group hidden">
+                    <label for="input-category-name">
+                        Category Name
+                    </label>
+
+                    <input type="text" id="input-category-name" placeholder="e.g., Work" autocomplete="off">
+
+                    <label style="margin-top: 6px;">
+                        Layout (Rows × Columns)
+                    </label>
+
+                    <div class="category-size-inputs">
+
+                        <input type="number" id="input-category-rows" min="1" step="1" placeholder="Rows">
+
+                        <span>×</span>
+
+                        <input type="number" id="input-category-cols" min="1" step="1" placeholder="Cols">
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+
+                <button id="btn-modal-delete" class="modal-btn btn-danger hidden">
+                    Delete
+                </button>
+
+                <div class="modal-footer-right">
+
+                    <button id="btn-modal-cancel" class="modal-btn">
+                        Cancel
+                    </button>
+
+                    <button id="btn-modal-submit" class="modal-btn btn-primary">
+                        Confirm
+                    </button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div id="shortcut-toast" class="shortcut-toast" role="status" aria-live="polite"></div>
+
+
+    <script type="module" src="app.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+{
+    "manifest_version": 3,
+    "name": "Minimalist Tab",
+    "version": "1.0.0",
+    "description": "A refined, Typora-inspired New Tab page with dimensional layouts and icon-only navigation.",
+    "icons": {
+        "16": "asserts/icon-16.png",
+        "48": "asserts/icon-48.png",
+        "128": "asserts/icon-128.png"
+    },
+    "permissions": [
+        "storage",
+        "favicon"
+    ],
+    "chrome_url_overrides": {
+        "newtab": "index.html"
+    }
+}
