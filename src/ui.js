@@ -127,6 +127,7 @@ export function initUI(onChange, wallpaperManager) {
                 if (key === "i") return importWebsiteDataFromFile();
                 if (key === "a") { openModal("ADD_CATEGORY"); return; }
                 if (key === "b") { const value = Number.parseInt(prompt(`Enter wallpaper number (1-${wallpaperManager.backgrounds.length}):`), 10); if (Number.isInteger(value) && await wallpaperManager.setByNumber(value)) showShortcutToast(`Wallpaper ${value} selected`); else showShortcutToast("Invalid wallpaper number"); return; }
+                if (key === "w") { showShortcutToast(wallpaperManager.currentNumber == null ? "Current wallpaper: unavailable" : `Current wallpaper: ${wallpaperManager.currentNumber}`); return; }
             }
         }
         if ($("#modal-overlay").classList.contains("hidden")) return; if (event.key === "Escape") closeModal(); if (event.key === "Enter") submitModal();

@@ -39,3 +39,4 @@ The extension has no build step: load the project directory from `chrome://exten
 - `1` — sequential wallpaper playback.
 - `2` — random wallpaper playback.
 - `B` — enter a numbered wallpaper to play it manually.
+- `W` — show the number of the current wallpaper.

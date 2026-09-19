@@ -14,6 +14,7 @@ export class WallpaperManager {
         this.strategy = result[WALLPAPER_STRATEGY_KEY] === "sequential" ? "sequential" : result[WALLPAPER_STRATEGY_KEY] === "manual" ? "manual" : "random";
     }
     get layer() { return index => document.getElementById(`bg-layer-${index}`); }
+    get currentNumber() { return this.backgrounds[this.index]?.number ?? null; }
     async pickNext(strategy = this.strategy) { const value = wallpaperStrategies[strategy]; return value && this.modes.length ? value.pick(this.modes, this.index) : { mode: "", index: -1 }; }
     async nextForPreload() { if (this.strategy === "sequential") { const index = (this.index + 1) % this.modes.length; return { mode: this.modes[index], index }; } return this.pickNext("random"); }
     async setByNumber(number) { const background = this.backgrounds.find(item => item.number === number); if (!background) return false; this.strategy = "manual"; chrome.storage.local.set({ [WALLPAPER_STRATEGY_KEY]: "manual", [WALLPAPER_KEY]: background.mode }); return this.set(background.mode, { persist: false }); }
