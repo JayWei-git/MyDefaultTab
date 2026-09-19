@@ -214,8 +214,7 @@ button {
 
     color: var(--text-muted);
 
-    /* Hover 前不可见 */
-    opacity: 0;
+    opacity: 1;
 
     padding: 3px 10px;
 
@@ -241,7 +240,6 @@ button {
     transform: translateY(0);
 
     transition:
-        opacity 0.2s ease,
         background 0.2s ease,
         box-shadow 0.2s ease,
         transform 0.2s ease;
@@ -249,8 +247,6 @@ button {
 
 
 .category-block:hover .category-title {
-    opacity: 0.85;
-
     background: transparent;
 
     backdrop-filter: none;
@@ -368,10 +364,9 @@ button {
 
     color: var(--text-muted);
 
-    opacity: 0;
+    opacity: 1;
 
     transition:
-        opacity 0.2s ease,
         background-color 0.2s ease,
         transform 0.2s ease,
         box-shadow 0.2s ease,
@@ -381,14 +376,7 @@ button {
 }
 
 
-.category-block:hover .add-tile {
-    opacity: 0.4;
-}
-
-
 .category-block:hover .add-tile:hover {
-    opacity: 0.85;
-
     background: transparent;
 
     backdrop-filter: none;
@@ -423,6 +411,20 @@ button {
 .add-tile > svg {
     position: relative;
     z-index: 1;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.category-block:hover .category-title-label {
+    opacity: 0.85;
+}
+
+.category-block:hover .add-tile > svg {
+    opacity: 0.4;
+}
+
+.category-block:hover .add-tile:hover > svg {
+    opacity: 0.85;
 }
 
 .hover-glass-surface {
