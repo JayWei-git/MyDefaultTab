@@ -8,6 +8,7 @@ const BASE_OPTIONS = {
     fallbackFilter: "none",
     frost: 0,
     lightness: 50,
+    pixelRatio: 2,
     saturation: 1
 };
 

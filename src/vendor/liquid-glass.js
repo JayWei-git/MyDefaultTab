@@ -6,6 +6,7 @@
  * scale values create chromatic aberration at the edges.
  *
  * Chromium only. Safari/Firefox fall back to regular backdrop-filter: blur().
+ * Local modification: high-DPI displacement-map rendering via pixelRatio.
  *
  * @see https://github.com/rizzytoday/liquid-glass
  * @license MIT
@@ -27,13 +28,14 @@ function resolveConfig(el, opts) {
     b: ab[2],
     frost: opts.frost ?? 0,
     saturation: opts.saturation ?? 1,
-    displace: opts.displaceBlur ?? 0
+    displace: opts.displaceBlur ?? 0,
+    pixelRatio: opts.pixelRatio ?? Math.min(Math.max(globalThis.devicePixelRatio || 1, 1), 2)
   };
 }
 const isChromium = typeof navigator !== "undefined" && /Chrome\//.test(navigator.userAgent);
 const _mapCache = /* @__PURE__ */ new Map();
 function buildDisplacementMap(c) {
-  const key = `${c.width}:${c.height}:${c.radius}:${c.scale}:${c.border}:${c.blur}:${c.lightness}:${c.alpha}`;
+  const key = `${c.width}:${c.height}:${c.radius}:${c.scale}:${c.border}:${c.blur}:${c.lightness}:${c.alpha}:${c.pixelRatio}`;
   const cached = _mapCache.get(key);
   if (cached) return cached;
   const maxDisplace = Math.max(Math.abs(c.scale) * 0.5, 20);
@@ -41,42 +43,46 @@ function buildDisplacementMap(c) {
   const padY = Math.ceil(maxDisplace);
   const totalW = c.width + padX * 2;
   const totalH = c.height + padY * 2;
+  const ratio = c.pixelRatio;
+  const width = c.width * ratio;
+  const height = c.height * ratio;
+  const radius = c.radius * ratio;
+  const ox = padX * ratio;
+  const oy = padY * ratio;
   const canvas = document.createElement("canvas");
-  canvas.width = totalW;
-  canvas.height = totalH;
+  canvas.width = Math.ceil(totalW * ratio);
+  canvas.height = Math.ceil(totalH * ratio);
   const ctx = canvas.getContext("2d");
   ctx.fillStyle = "rgb(128, 128, 128)";
-  ctx.fillRect(0, 0, totalW, totalH);
-  const ox = padX;
-  const oy = padY;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.save();
   ctx.beginPath();
-  ctx.roundRect(ox, oy, c.width, c.height, c.radius);
+  ctx.roundRect(ox, oy, width, height, radius);
   ctx.clip();
   ctx.fillStyle = "#000000";
-  ctx.fillRect(ox, oy, c.width, c.height);
-  const redGrad = ctx.createLinearGradient(ox + c.width, oy, ox, oy);
+  ctx.fillRect(ox, oy, width, height);
+  const redGrad = ctx.createLinearGradient(ox + width, oy, ox, oy);
   redGrad.addColorStop(0, "#000000");
   redGrad.addColorStop(1, "#ff0000");
   ctx.fillStyle = redGrad;
-  ctx.fillRect(ox, oy, c.width, c.height);
+  ctx.fillRect(ox, oy, width, height);
   ctx.globalCompositeOperation = "difference";
-  const blueGrad = ctx.createLinearGradient(ox, oy, ox, oy + c.height);
+  const blueGrad = ctx.createLinearGradient(ox, oy, ox, oy + height);
   blueGrad.addColorStop(0, "#000000");
   blueGrad.addColorStop(1, "#0000ff");
   ctx.fillStyle = blueGrad;
-  ctx.fillRect(ox, oy, c.width, c.height);
+  ctx.fillRect(ox, oy, width, height);
   ctx.globalCompositeOperation = "source-over";
-  const borderPx = Math.min(c.width, c.height) * (c.border * 0.5);
-  ctx.filter = `blur(${c.blur}px)`;
+  const borderPx = Math.min(width, height) * (c.border * 0.5);
+  ctx.filter = `blur(${c.blur * ratio}px)`;
   ctx.fillStyle = `hsla(0, 0%, ${c.lightness}%, ${c.alpha})`;
   ctx.beginPath();
   ctx.roundRect(
     ox + borderPx,
     oy + borderPx,
-    c.width - borderPx * 2,
-    c.height - borderPx * 2,
-    c.radius
+    width - borderPx * 2,
+    height - borderPx * 2,
+    radius
   );
   ctx.fill();
   ctx.restore();
