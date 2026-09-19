@@ -253,15 +253,15 @@ button {
     opacity: 0.85;
 
     background:
-        radial-gradient(120% 150% at 8% 0%, rgba(255, 255, 255, 0.1), transparent 46%),
-        radial-gradient(100% 90% at 100% 100%, rgba(156, 198, 255, 0.045), transparent 56%),
-        linear-gradient(135deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.012));
+        radial-gradient(120% 150% at 8% 0%, rgba(255, 255, 255, 0.15), transparent 46%),
+        radial-gradient(100% 90% at 100% 100%, rgba(156, 198, 255, 0.07), transparent 56%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.018));
 
-    backdrop-filter: blur(8px) saturate(135%) brightness(1.03);
+    backdrop-filter: blur(12px) saturate(155%) contrast(1.04) brightness(1.03);
 
-    -webkit-backdrop-filter: blur(8px) saturate(135%) brightness(1.03);
+    -webkit-backdrop-filter: blur(12px) saturate(155%) contrast(1.04) brightness(1.03);
 
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.1), 0 3px 10px rgba(255, 255, 255, 0.08), inset 0 0 12px rgba(255, 255, 255, 0.025);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.14), 0 4px 12px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(18, 37, 74, 0.2), inset 0 0 16px rgba(255, 255, 255, 0.06);
 
     /* 与图标 hover 保持完全一致的向上浮现 */
     transform: translateY(-3px);
@@ -324,19 +324,19 @@ button {
 
 .site-item:hover {
     background:
-        radial-gradient(120% 150% at 8% 0%, rgba(255, 255, 255, 0.1), transparent 46%),
-        radial-gradient(100% 90% at 100% 100%, rgba(156, 198, 255, 0.045), transparent 56%),
-        linear-gradient(135deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.012));
+        radial-gradient(120% 150% at 8% 0%, rgba(255, 255, 255, 0.15), transparent 46%),
+        radial-gradient(100% 90% at 100% 100%, rgba(156, 198, 255, 0.07), transparent 56%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.018));
 
-    backdrop-filter: blur(8px) saturate(135%) brightness(1.03);
+    backdrop-filter: blur(12px) saturate(155%) contrast(1.04) brightness(1.03);
 
-    -webkit-backdrop-filter: blur(8px) saturate(135%) brightness(1.03);
+    -webkit-backdrop-filter: blur(12px) saturate(155%) contrast(1.04) brightness(1.03);
 
     border: none !important;
 
     transform: translateY(-3px);
 
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.1), 0 3px 10px rgba(255, 255, 255, 0.08), inset 0 0 12px rgba(255, 255, 255, 0.025);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.14), 0 4px 12px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(18, 37, 74, 0.2), inset 0 0 16px rgba(255, 255, 255, 0.06);
 
     z-index: 10;
 }
@@ -357,13 +357,13 @@ button {
     background:
         conic-gradient(from 18deg at 50% 50%,
             transparent 0deg 28deg,
-            rgba(255, 255, 255, 0.26) 38deg 43deg,
+            rgba(255, 255, 255, 0.38) 38deg 43deg,
             transparent 55deg 142deg,
-            rgba(154, 210, 255, 0.2) 151deg 158deg,
+            rgba(154, 210, 255, 0.3) 151deg 158deg,
             transparent 170deg 254deg,
-            rgba(255, 255, 255, 0.16) 264deg 270deg,
+            rgba(255, 255, 255, 0.24) 264deg 270deg,
             transparent 282deg 360deg);
-    filter: blur(0.7px);
+    filter: blur(0.8px);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -380,9 +380,9 @@ button {
     pointer-events: none;
     opacity: 0;
     background:
-        linear-gradient(112deg, transparent 18%, rgba(255, 255, 255, 0.13) 31%, transparent 43%),
-        linear-gradient(292deg, transparent 54%, rgba(142, 205, 255, 0.1) 66%, transparent 77%);
-    filter: blur(2.5px);
+        linear-gradient(112deg, transparent 18%, rgba(255, 255, 255, 0.2) 31%, transparent 43%),
+        linear-gradient(292deg, transparent 54%, rgba(142, 205, 255, 0.16) 66%, transparent 77%);
+    filter: blur(3px);
     mix-blend-mode: screen;
 }
 
@@ -451,17 +451,17 @@ button {
     opacity: 0.85;
 
     background:
-        radial-gradient(120% 150% at 8% 0%, rgba(255, 255, 255, 0.1), transparent 46%),
-        radial-gradient(100% 90% at 100% 100%, rgba(156, 198, 255, 0.045), transparent 56%),
-        linear-gradient(135deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.012));
+        radial-gradient(120% 150% at 8% 0%, rgba(255, 255, 255, 0.15), transparent 46%),
+        radial-gradient(100% 90% at 100% 100%, rgba(156, 198, 255, 0.07), transparent 56%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.018));
 
-    backdrop-filter: blur(8px) saturate(135%) brightness(1.03);
+    backdrop-filter: blur(12px) saturate(155%) contrast(1.04) brightness(1.03);
 
-    -webkit-backdrop-filter: blur(8px) saturate(135%) brightness(1.03);
+    -webkit-backdrop-filter: blur(12px) saturate(155%) contrast(1.04) brightness(1.03);
 
     transform: translateY(-3px);
 
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.1), 0 3px 10px rgba(255, 255, 255, 0.08), inset 0 0 12px rgba(255, 255, 255, 0.025);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.14), 0 4px 12px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(18, 37, 74, 0.2), inset 0 0 16px rgba(255, 255, 255, 0.06);
 
     color: var(--text-main);
 
@@ -1074,17 +1074,17 @@ body.space-private .modal-btn.btn-danger:hover {
 body.space-private .site-item:hover,
 body.space-private .add-tile:hover {
     background:
-        radial-gradient(120% 150% at 8% 0%, rgba(206, 198, 255, 0.09), transparent 46%),
-        radial-gradient(100% 90% at 100% 100%, rgba(161, 145, 255, 0.05), transparent 56%),
-        linear-gradient(135deg, rgba(48, 48, 78, 0.1), rgba(25, 25, 48, 0.035));
+        radial-gradient(120% 150% at 8% 0%, rgba(206, 198, 255, 0.13), transparent 46%),
+        radial-gradient(100% 90% at 100% 100%, rgba(161, 145, 255, 0.08), transparent 56%),
+        linear-gradient(135deg, rgba(48, 48, 78, 0.14), rgba(25, 25, 48, 0.05));
 
-    backdrop-filter: blur(8px) saturate(135%) brightness(1.04);
+    backdrop-filter: blur(12px) saturate(155%) contrast(1.04) brightness(1.04);
 
-    -webkit-backdrop-filter: blur(8px) saturate(135%) brightness(1.04);
+    -webkit-backdrop-filter: blur(12px) saturate(155%) contrast(1.04) brightness(1.04);
 
     border: none !important;
 
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.24), 0 4px 12px rgba(184, 164, 255, 0.12), inset 0 1px 0 rgba(245, 240, 255, 0.28), inset 0 -1px 0 rgba(12, 10, 36, 0.3), inset 0 0 16px rgba(210, 198, 255, 0.07);
 }
 
 
@@ -1106,13 +1106,13 @@ body.space-private .global-tooltip {
 
 body.space-private .category-block:hover .category-title {
     background:
-        radial-gradient(120% 150% at 8% 0%, rgba(206, 198, 255, 0.09), transparent 46%),
-        radial-gradient(100% 90% at 100% 100%, rgba(161, 145, 255, 0.05), transparent 56%),
-        linear-gradient(135deg, rgba(48, 48, 78, 0.09), rgba(25, 25, 48, 0.03));
+        radial-gradient(120% 150% at 8% 0%, rgba(206, 198, 255, 0.13), transparent 46%),
+        radial-gradient(100% 90% at 100% 100%, rgba(161, 145, 255, 0.08), transparent 56%),
+        linear-gradient(135deg, rgba(48, 48, 78, 0.12), rgba(25, 25, 48, 0.045));
 
-    backdrop-filter: blur(8px) saturate(135%) brightness(1.04);
+    backdrop-filter: blur(12px) saturate(155%) contrast(1.04) brightness(1.04);
 
-    -webkit-backdrop-filter: blur(8px) saturate(135%) brightness(1.04);
+    -webkit-backdrop-filter: blur(12px) saturate(155%) contrast(1.04) brightness(1.04);
 }
 
 @media (prefers-reduced-motion: reduce) {
