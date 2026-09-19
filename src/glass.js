@@ -20,6 +20,7 @@ function createLens(className, options) {
     let instance = null;
     let target = null;
     let revision = 0;
+    let configSignature = "";
 
     function show(nextTarget) {
         if (!nextTarget || target === nextTarget) return;
@@ -36,8 +37,10 @@ function createLens(className, options) {
                 width: Math.max(1, Math.round(rect.width)),
                 height: Math.max(1, Math.round(rect.height))
             };
-            if (instance) instance.update(config);
-            else instance = createLiquidGlass(surface, config);
+            const nextSignature = `${config.width}:${config.height}:${config.borderRadius}:${config.scale}`;
+            if (!instance) instance = createLiquidGlass(surface, config);
+            else if (nextSignature !== configSignature) instance.update(config);
+            configSignature = nextSignature;
             surface.classList.add("is-visible");
         });
     }

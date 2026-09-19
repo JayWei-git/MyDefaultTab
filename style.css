@@ -5,19 +5,11 @@
 :root {
     --bg-main: #ffffff;
     --bg-sub: #f8f9fa;
-    --bg-card: #ffffff;
-
     --text-main: #333333;
     --text-muted: #777777;
 
     --border-color: #e7eaed;
     --border-focus: #d0d4d9;
-
-    --card-shadow:
-        0 6px 18px rgba(0, 0, 0, 0.04),
-        0 1px 3px rgba(0, 0, 0, 0.02);
-
-    --tooltip-bg: #333333;
 
     --font-system:
         -apple-system,
@@ -57,11 +49,6 @@ body {
     transition:
         background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
         color 0.4s ease;
-}
-
-
-canvas {
-    pointer-events: none;
 }
 
 
@@ -309,7 +296,10 @@ button {
 
     user-select: none;
 
-    transition: all 0.2s ease;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
 
     z-index: 1;
 }
@@ -473,20 +463,6 @@ button {
 }
 
 
-.items-grid.drag-over .site-item {
-    transition: none !important;
-}
-
-
-.items-grid.drag-over {
-    background-color: rgba(0, 0, 0, 0.02);
-
-    border-radius: 6px;
-
-    outline: 2px dashed var(--border-focus);
-}
-
-
 .category-block.is-category-dragging {
     opacity: 0.35;
 
@@ -495,31 +471,6 @@ button {
     transition:
         opacity 0.15s ease,
         transform 0.15s ease;
-}
-
-
-/* 两 category 之间的插入指示线 */
-.category-block.drag-over-cat::before {
-    content: "";
-
-    position: absolute;
-
-    top: 0;
-    bottom: 0;
-
-    left: -19px;
-
-    width: 3px;
-
-    background-color: var(--text-main);
-
-    border-radius: 2px;
-
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
-
-    pointer-events: none;
-
-    z-index: 100;
 }
 
 
@@ -594,6 +545,10 @@ button {
     color: var(--text-muted);
 
     font-weight: 500;
+}
+
+.form-group .layout-label {
+    margin-top: 6px;
 }
 
 
@@ -763,172 +718,6 @@ button {
 }
 
 
-/* ==========================================
-   4. Global Tooltip
-   ========================================== */
-
-.global-tooltip {
-    position: fixed;
-
-    pointer-events: none;
-
-    z-index: 10000;
-
-    background-color: var(--tooltip-bg);
-
-    color: #ffffff;
-
-    font-size: 11px;
-
-    font-weight: 500;
-
-    padding: 4px 10px;
-
-    border-radius: 4px;
-
-    white-space: nowrap;
-
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-
-    opacity: 0;
-
-    transform: translateX(-50%) translateY(4px);
-
-    transition:
-        opacity 0.15s ease,
-        transform 0.15s ease;
-}
-
-
-.global-tooltip.visible {
-    opacity: 1;
-
-    transform: translateX(-50%) translateY(0);
-}
-
-
-/* ==========================================
-   5. Space Switcher
-   ========================================== */
-
-.bottom-controls {
-    position: fixed;
-
-    bottom: 28px;
-
-    left: 28px;
-    right: 28px;
-    width: auto;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: flex-start;
-
-    z-index: 1000;
-
-    opacity: 0.04;
-    transition: opacity 0.3s ease;
-}
-
-.bottom-controls:hover {
-    opacity: 0.82;
-}
-
-.bottom-control-group {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-#eye-toggle {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-#eye-toggle:hover {
-    transform: translateX(-50%) scale(1.08);
-}
-
-#space-switcher {
-    margin-left: auto;
-}
-
-
-.space-switcher {
-    width: 32px;
-    height: 32px;
-
-    border-radius: 50%;
-
-    border: 1px solid transparent;
-
-    background: var(--bg-card);
-
-    color: var(--text-muted);
-
-    cursor: pointer;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    opacity: 1;
-
-    transition:
-        opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-        color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-        border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-        box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-
-    outline: none;
-}
-
-
-.space-switcher:hover {
-    opacity: 1;
-
-    color: var(--text-main);
-
-    border-color: var(--border-color);
-
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-
-    transform: scale(1.08);
-}
-
-.data-control {
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 1;
-}
-
-
-/* Eye icon states */
-.eye-toggle .eye-slash {
-    opacity: 0;
-
-    transform: scale(0.4);
-
-    transform-origin: center;
-    transform-box: fill-box;
-
-    transition:
-        opacity 0.2s ease,
-        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-
-body.icons-hidden .eye-toggle .eye-slash {
-    opacity: 1;
-
-    transform: scale(1);
-}
-
-
 body.icons-hidden .container {
     opacity: 0;
 
@@ -965,15 +754,13 @@ body.icons-hidden .container.space-entering.space-entered {
 
 
 /* ==========================================
-   6. Private Space Theme
+   4. Private Space Theme
    ========================================== */
 
 body.space-private {
     --bg-main: #1a1a2e;
 
     --bg-sub: #141425;
-
-    --bg-card: #1e1e36;
 
     --text-main: #e0e0e8;
 
@@ -983,15 +770,7 @@ body.space-private {
 
     --border-focus: #4a4a78;
 
-    --card-shadow:
-        0 6px 18px rgba(0, 0, 0, 0.3),
-        0 1px 3px rgba(0, 0, 0, 0.2);
-
-    --tooltip-bg: #e0e0e8;
-
     --accent-color: #7c5ce7;
-
-    --accent-glow: rgba(124, 92, 231, 0.25);
 }
 
 
@@ -1041,22 +820,6 @@ body.space-private .modal-btn.btn-danger:hover {
 }
 
 
-body.space-private .space-switcher:hover {
-    border-color: var(--accent-color);
-
-    box-shadow: 0 2px 14px var(--accent-glow);
-
-    color: var(--accent-color);
-}
-
-
-body.space-private .global-tooltip {
-    background-color: #e0e0e8;
-
-    color: #1a1a2e;
-}
-
-
 body.space-private .hover-glass-surface {
     box-shadow:
         0 10px 24px rgba(0, 0, 0, 0.2),
@@ -1077,15 +840,8 @@ body.space-private .hover-glass-surface {
     }
 }
 
-body.space-private .category-block.drag-over-cat::before {
-    background-color: var(--accent-color);
-
-    box-shadow: 0 0 8px var(--accent-glow);
-}
-
-
 /* ==========================================
-   7. Background Themes
+   5. Background Themes
    ========================================== */
 
 .bg-layer {

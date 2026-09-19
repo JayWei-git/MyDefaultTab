@@ -1,21 +1,93 @@
 import { NEW_CATEGORY_SIZE, DEFAULT_CATEGORY_SIZE } from "./config.js";
 import { repository, saveSpaces } from "./storage.js";
 
-const active = () => repository.categories;
-const id = prefix => `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-const category = catId => active().find(item => item.id === catId);
+const activeCategories = () => repository.categories;
+const createId = prefix => `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+const positiveInteger = (value, fallback = 1) => Math.max(1, Math.floor(Number(value) || fallback));
+
+const normalizeUrl = url => /^https?:\/\//i.test(url) ? url : `https://${url}`;
+export const getCategory = categoryId => activeCategories().find(category => category.id === categoryId);
+export const defaultSize = DEFAULT_CATEGORY_SIZE;
 
 export const categories = {
-    add(title = "") { const value = { id: id("cat"), title, ...NEW_CATEGORY_SIZE, items: [] }; active().push(value); saveSpaces(); return value; },
-    rename(catId, title) { const value = category(catId); if (value) { value.title = title; saveSpaces(); } },
-    resize(catId, rows, columns) { const value = category(catId); if (value) { value.rows = Math.max(1, Math.floor(Number(rows) || 1)); value.columns = Math.max(1, Math.floor(Number(columns) || 1)); saveSpaces(); } },
-    remove(catId) { const index = active().findIndex(item => item.id === catId); if (index >= 0) { active().splice(index, 1); saveSpaces(); } },
-    move(catId, targetIndex) { const from = active().findIndex(item => item.id === catId); if (from < 0) return; const [value] = active().splice(from, 1); const index = Math.max(0, Math.min(targetIndex, active().length)); active().splice(index, 0, value); saveSpaces(); },
-    addSite(catId, name, url) { const value = category(catId); if (!value) return; const item = { id: id("site"), name, url: normalizeUrl(url) }; value.items.push(item); saveSpaces(); return item; },
-    updateSite(catId, itemId, name, url) { const item = category(catId)?.items.find(site => site.id === itemId); if (item) { Object.assign(item, { name, url: normalizeUrl(url) }); saveSpaces(); } },
-    removeSite(catId, itemId) { const value = category(catId); if (value) { value.items = value.items.filter(item => item.id !== itemId); saveSpaces(); } },
-    reorder(catId, itemId, targetId) { const value = category(catId); if (!value || itemId === targetId) return; const from = value.items.findIndex(item => item.id === itemId); const to = value.items.findIndex(item => item.id === targetId); if (from < 0 || to < 0) return; const [item] = value.items.splice(from, 1); value.items.splice(to, 0, item); saveSpaces(); }
+    add(title = "", rows = NEW_CATEGORY_SIZE.rows, columns = NEW_CATEGORY_SIZE.columns) {
+        const category = {
+            id: createId("cat"),
+            title,
+            rows: positiveInteger(rows, NEW_CATEGORY_SIZE.rows),
+            columns: positiveInteger(columns, NEW_CATEGORY_SIZE.columns),
+            items: []
+        };
+        activeCategories().push(category);
+        saveSpaces();
+        return category;
+    },
+
+    update(categoryId, { title, rows, columns }) {
+        const category = getCategory(categoryId);
+        if (!category) return false;
+        category.title = title;
+        category.rows = positiveInteger(rows);
+        category.columns = positiveInteger(columns);
+        saveSpaces();
+        return true;
+    },
+
+    remove(categoryId) {
+        const index = activeCategories().findIndex(category => category.id === categoryId);
+        if (index < 0) return false;
+        activeCategories().splice(index, 1);
+        saveSpaces();
+        return true;
+    },
+
+    move(categoryId, targetIndex) {
+        const categories = activeCategories();
+        const from = categories.findIndex(category => category.id === categoryId);
+        if (from < 0) return false;
+        const [category] = categories.splice(from, 1);
+        const to = Math.max(0, Math.min(targetIndex, categories.length));
+        categories.splice(to, 0, category);
+        saveSpaces();
+        return true;
+    },
+
+    addSite(categoryId, name, url) {
+        const category = getCategory(categoryId);
+        if (!category) return null;
+        const site = { id: createId("site"), name, url: normalizeUrl(url) };
+        category.items.push(site);
+        saveSpaces();
+        return site;
+    },
+
+    updateSite(categoryId, siteId, name, url) {
+        const site = getCategory(categoryId)?.items.find(item => item.id === siteId);
+        if (!site) return false;
+        Object.assign(site, { name, url: normalizeUrl(url) });
+        saveSpaces();
+        return true;
+    },
+
+    removeSite(categoryId, siteId) {
+        const category = getCategory(categoryId);
+        if (!category) return false;
+        const nextItems = category.items.filter(item => item.id !== siteId);
+        if (nextItems.length === category.items.length) return false;
+        category.items = nextItems;
+        saveSpaces();
+        return true;
+    },
+
+    reorder(categoryId, siteId, targetId) {
+        const category = getCategory(categoryId);
+        if (!category || siteId === targetId) return false;
+        const from = category.items.findIndex(item => item.id === siteId);
+        const to = category.items.findIndex(item => item.id === targetId);
+        if (from < 0 || to < 0) return false;
+        const [site] = category.items.splice(from, 1);
+        category.items.splice(to, 0, site);
+        saveSpaces();
+        return true;
+    }
 };
-export const normalizeUrl = url => /^https?:\/\//i.test(url) ? url : `https://${url}`;
-export const getCategory = category;
-export const defaultSize = DEFAULT_CATEGORY_SIZE;

@@ -88,6 +88,7 @@ function buildDisplacementMap(c) {
   ctx.restore();
   const uri = canvas.toDataURL();
   _mapCache.set(key, uri);
+  if (_mapCache.size > 32) _mapCache.delete(_mapCache.keys().next().value);
   return uri;
 }
 let _instanceCount = 0;
@@ -172,17 +173,16 @@ function createLiquidGlass(element, options = {}) {
   };
   applyStyles(config);
   let resizeRaf = 0;
-  const ro = new ResizeObserver(() => {
+  const autoSize = currentOpts.width == null || currentOpts.height == null;
+  const ro = autoSize ? new ResizeObserver(() => {
     cancelAnimationFrame(resizeRaf);
     resizeRaf = requestAnimationFrame(() => {
-      if (currentOpts.width == null || currentOpts.height == null) {
-        config = resolveConfig(element, currentOpts);
-        applyConfig(config, refs);
-        applyStyles(config);
-      }
+      config = resolveConfig(element, currentOpts);
+      applyConfig(config, refs);
+      applyStyles(config);
     });
-  });
-  ro.observe(element);
+  }) : null;
+  ro?.observe(element);
   return {
     isActive: true,
     filterElement: refs.svg,
@@ -193,7 +193,7 @@ function createLiquidGlass(element, options = {}) {
       applyStyles(config);
     },
     destroy() {
-      ro.disconnect();
+      ro?.disconnect();
       cancelAnimationFrame(resizeRaf);
       refs.svg.remove();
       element.style.backdropFilter = "";

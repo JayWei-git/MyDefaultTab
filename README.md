@@ -10,7 +10,12 @@ Chrome New Tab extension with independent navigation spaces and local video/imag
 - `src/categories.js` — category/site domain operations; UI code does not mutate data directly.
 - `src/wallpaper.js` — media discovery, double-buffer transitions, and playback.
 - `src/wallpaper-strategies.js` — wallpaper ordering strategy registry.
-- `src/ui.js` — DOM rendering and event wiring.
+- `src/ui.js` — lightweight UI composition root.
+- `src/navigation.js` — category/site rendering and drag interactions.
+- `src/editor.js` — modal editing workflow.
+- `src/shortcuts.js` — keyboard command routing and space transitions.
+- `src/transfer.js` — JSON import/export browser workflow.
+- `src/toast.js` — transient status notifications.
 - `src/glass.js` — reusable hover lenses for real edge refraction.
 - `src/vendor/liquid-glass.js` — vendored MIT liquid-glass displacement engine with local 2× map supersampling.
 
@@ -20,8 +25,6 @@ Add a strategy with a `pick(modes)` function in `src/wallpaper-strategies.js`, t
 
 ```js
 registerWallpaperStrategy("random", {
-    label: "🎲",
-    title: "Random wallpaper",
     pick(modes) {
         const index = Math.floor(Math.random() * modes.length);
         return Promise.resolve({ mode: modes[index], index });

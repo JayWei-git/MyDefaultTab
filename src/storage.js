@@ -3,6 +3,7 @@ import { STORAGE_KEY, LEGACY_STORAGE_KEY, DEFAULT_SPACES, DEFAULT_CATEGORY_SIZE 
 const clone = value => structuredClone(value);
 const chromeGet = keys => new Promise(resolve => chrome.storage.local.get(keys, resolve));
 let saveTimer = null;
+let dirty = false;
 
 export const repository = {
     spaces: {},
@@ -22,10 +23,10 @@ function normalizeSpace(space) {
 }
 
 export function saveSpaces(immediate = false) {
-    const write = () => chrome.storage.local.set({ [STORAGE_KEY]: { spaces: repository.spaces } });
-    if (immediate) { if (saveTimer) clearTimeout(saveTimer); saveTimer = null; write(); return; }
+    dirty = true;
+    if (immediate) { flushStorage(); return; }
     if (saveTimer) clearTimeout(saveTimer);
-    saveTimer = setTimeout(() => { saveTimer = null; write(); }, 100);
+    saveTimer = setTimeout(flushStorage, 100);
 }
 
 export async function loadSpaces() {
@@ -41,7 +42,7 @@ export async function loadSpaces() {
 }
 
 export function switchSpace(name) {
-    if (repository.spaces[name]) { repository.currentSpace = name; saveSpaces(); }
+    if (repository.spaces[name]) repository.currentSpace = name;
 }
 export function exportWebsiteData() {
     return { format: "minimalist-tab", version: 1, exportedAt: new Date().toISOString(), spaces: structuredClone(repository.spaces) };
@@ -52,10 +53,16 @@ function isValidImport(data) {
 }
 export function importWebsiteData(data) {
     if (!isValidImport(data)) throw new Error("Invalid Minimalist Tab JSON data");
-    repository.spaces = data.spaces;
+    repository.spaces = clone(data.spaces);
     repository.spaces.default = normalizeSpace(repository.spaces.default);
     repository.spaces.private = normalizeSpace(repository.spaces.private);
     repository.currentSpace = "default";
     saveSpaces(true);
 }
-export function flushStorage() { saveSpaces(true); }
+export function flushStorage() {
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = null;
+    if (!dirty) return;
+    dirty = false;
+    chrome.storage.local.set({ [STORAGE_KEY]: { spaces: repository.spaces } });
+}
