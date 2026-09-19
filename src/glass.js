@@ -8,7 +8,9 @@ const BASE_OPTIONS = {
     fallbackFilter: "none",
     frost: 0,
     lightness: 50,
-    pixelRatio: 2,
+    // Small hover lenses keep 4× displacement maps affordable while preserving
+    // the fine detail of the background as it refracts through the glass edge.
+    pixelRatio: 4,
     saturation: 1
 };
 
