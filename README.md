@@ -40,4 +40,4 @@ The extension has no build step: load the project directory from `chrome://exten
 - `2` — random wallpaper playback.
 - `B` — enter a numbered wallpaper to play it manually.
 - `W` — show the number of the current wallpaper.
-- `F` — fix the current wallpaper and stop automatic playback.
+- `F` — toggle fixing the current wallpaper; press again to resume automatic playback.

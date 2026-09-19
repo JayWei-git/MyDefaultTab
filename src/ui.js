@@ -119,8 +119,8 @@ export function initUI(onChange, wallpaperManager) {
         if (!(event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) && !event.isComposing) {
             const key = event.key.toLowerCase();
             if (!event.ctrlKey && !event.altKey && !event.metaKey) {
-                if (event.key === "1") { wallpaperManager.strategy = "sequential"; chrome.storage.local.set({ wallpaper_strategy: "sequential" }); const pick = await wallpaperManager.pickNext("sequential"); if (pick.mode) await wallpaperManager.set(pick.mode, { persist: false }); showShortcutToast("Switched to Sequential Playback"); return; }
-                if (event.key === "2") { wallpaperManager.strategy = "random"; chrome.storage.local.set({ wallpaper_strategy: "random" }); const pick = await wallpaperManager.pickNext("random"); if (pick.mode) await wallpaperManager.set(pick.mode, { persist: false }); showShortcutToast("Switched to Random Playback"); return; }
+                if (event.key === "1") { wallpaperManager.strategy = "sequential"; wallpaperManager.automaticStrategy = "sequential"; chrome.storage.local.set({ wallpaper_strategy: "sequential" }); const pick = await wallpaperManager.pickNext("sequential"); if (pick.mode) await wallpaperManager.set(pick.mode, { persist: false }); showShortcutToast("Switched to Sequential Playback"); return; }
+                if (event.key === "2") { wallpaperManager.strategy = "random"; wallpaperManager.automaticStrategy = "random"; chrome.storage.local.set({ wallpaper_strategy: "random" }); const pick = await wallpaperManager.pickNext("random"); if (pick.mode) await wallpaperManager.set(pick.mode, { persist: false }); showShortcutToast("Switched to Random Playback"); return; }
                 if (key === "s") return switchSpaceShortcut();
                 if (key === "h") { const hidden = document.body.classList.toggle("icons-hidden"); setIconsHidden(hidden); showShortcutToast(hidden ? "Icons hidden" : "Icons shown"); return; }
                 if (key === "e") { downloadWebsiteData(); showShortcutToast("Website data exported"); return; }
@@ -128,7 +128,7 @@ export function initUI(onChange, wallpaperManager) {
                 if (key === "a") { openModal("ADD_CATEGORY"); return; }
                 if (key === "b") { const value = Number.parseInt(prompt(`Enter wallpaper number (1-${wallpaperManager.backgrounds.length}):`), 10); if (Number.isInteger(value) && await wallpaperManager.setByNumber(value)) showShortcutToast(`Wallpaper ${value} selected`); else showShortcutToast("Invalid wallpaper number"); return; }
                 if (key === "w") { showShortcutToast(wallpaperManager.currentNumber == null ? "Current wallpaper: unavailable" : `Current wallpaper: ${wallpaperManager.currentNumber}`); return; }
-                if (key === "f") { showShortcutToast(wallpaperManager.fixCurrent() ? "Wallpaper fixed" : "Wallpaper unavailable"); return; }
+                if (key === "f") { const fixed = await wallpaperManager.toggleFixed(); showShortcutToast(fixed ? "Wallpaper fixed" : "Wallpaper unfixed"); return; }
             }
         }
         if ($("#modal-overlay").classList.contains("hidden")) return; if (event.key === "Escape") closeModal(); if (event.key === "Enter") submitModal();

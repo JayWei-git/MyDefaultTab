@@ -3,7 +3,7 @@ import { wallpaperStrategies } from "./wallpaper-strategies.js";
 
 // Owns exactly two media layers: one visible and one reusable preload layer.
 export class WallpaperManager {
-    constructor() { this.backgrounds = []; this.modes = []; this.index = 0; this.activeLayer = 0; this.token = 0; this.preloadToken = 0; this.preloaded = null; this.strategy = "random"; }
+    constructor() { this.backgrounds = []; this.modes = []; this.index = 0; this.activeLayer = 0; this.token = 0; this.preloadToken = 0; this.preloaded = null; this.strategy = "random"; this.automaticStrategy = "random"; }
     async discover() {
         const entries = await new Promise(resolve => { if (!chrome.runtime?.getPackageDirectoryEntry) return resolve([]); chrome.runtime.getPackageDirectoryEntry(root => root.getDirectory("background", { create: false }, dir => { const reader = dir.createReader(); const all = []; const read = () => reader.readEntries(items => items.length ? (all.push(...items), read()) : resolve(all), () => resolve([])); read(); }, () => resolve([]))); });
         this.backgrounds = entries.filter(e => e.isFile && /^\d+\./i.test(e.name) && MEDIA_EXTENSIONS.test(e.name)).map(file => { const number = Number(file.name.match(/\d+/)[0]); const video = isVideoFile(file.name); return { mode: `${video ? "bg-video" : "bg-image"}-${number}`, file: `background/${file.name}`, isVideo: video, number }; }).sort((a, b) => a.number - b.number);
@@ -12,13 +12,15 @@ export class WallpaperManager {
     async loadSettings() {
         const result = await new Promise(resolve => chrome.storage.local.get([WALLPAPER_STRATEGY_KEY], resolve));
         this.strategy = result[WALLPAPER_STRATEGY_KEY] === "sequential" ? "sequential" : result[WALLPAPER_STRATEGY_KEY] === "manual" ? "manual" : "random";
+        this.automaticStrategy = this.strategy === "sequential" ? "sequential" : "random";
     }
     get layer() { return index => document.getElementById(`bg-layer-${index}`); }
     get currentNumber() { return this.backgrounds[this.index]?.number ?? null; }
     async pickNext(strategy = this.strategy) { const value = wallpaperStrategies[strategy]; return value && this.modes.length ? value.pick(this.modes, this.index) : { mode: "", index: -1 }; }
     async nextForPreload() { if (this.strategy === "sequential") { const index = (this.index + 1) % this.modes.length; return { mode: this.modes[index], index }; } return this.pickNext("random"); }
     stopPreload() { ++this.preloadToken; if (this.preloaded) this.releaseLayer(this.preloaded.layer); this.preloaded = null; }
-    fixCurrent() { const background = this.backgrounds[this.index]; if (!background) return false; this.strategy = "manual"; this.stopPreload(); chrome.storage.local.set({ [WALLPAPER_STRATEGY_KEY]: "manual", [WALLPAPER_KEY]: background.mode }); return true; }
+    fixCurrent() { const background = this.backgrounds[this.index]; if (!background) return false; if (this.strategy !== "manual") this.automaticStrategy = this.strategy; this.strategy = "manual"; this.stopPreload(); chrome.storage.local.set({ [WALLPAPER_STRATEGY_KEY]: "manual", [WALLPAPER_KEY]: background.mode }); return true; }
+    async toggleFixed() { if (this.strategy !== "manual") return this.fixCurrent(); this.strategy = this.automaticStrategy || "random"; chrome.storage.local.set({ [WALLPAPER_STRATEGY_KEY]: this.strategy }); const pick = await this.pickNext(this.strategy); if (pick.mode) await this.set(pick.mode, { persist: false }); return false; }
     async setByNumber(number) { const background = this.backgrounds.find(item => item.number === number); if (!background) return false; this.strategy = "manual"; this.stopPreload(); chrome.storage.local.set({ [WALLPAPER_STRATEGY_KEY]: "manual", [WALLPAPER_KEY]: background.mode }); return this.set(background.mode, { persist: false }); }
     releaseLayer(index) { const layer = this.layer(index); const video = layer?.querySelector("video"); const image = layer?.querySelector("img"); if (video) { video.pause(); video.removeAttribute("src"); video.load(); } if (image) image.removeAttribute("src"); }
     async prepareLayer(index, background) {
