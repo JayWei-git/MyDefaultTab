@@ -8,9 +8,9 @@ const BASE_OPTIONS = {
     fallbackFilter: "none",
     frost: 0,
     lightness: 50,
-    // Small hover lenses keep 4× displacement maps affordable while preserving
-    // the fine detail of the background as it refracts through the glass edge.
-    pixelRatio: 4,
+    // The SVG filter output is limited by the lens' displayed size. 2× retains
+    // high-DPI edge detail without wasting work on imperceptible 4× input maps.
+    pixelRatio: 2,
     saturation: 1
 };
 
