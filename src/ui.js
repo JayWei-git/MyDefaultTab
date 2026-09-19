@@ -1,6 +1,7 @@
 import { repository, switchSpace, exportWebsiteData, importWebsiteData } from "./storage.js";
 import { categories, getCategory, defaultSize } from "./categories.js";
 import { loadPreferences, setIconsHidden } from "./preferences.js";
+import { bindGlassInteractions, resetGlassInteractions } from "./glass.js";
 
 const $ = selector => document.querySelector(selector);
 let edit = null;
@@ -11,8 +12,10 @@ export function render(onChange) {
     const container = $("#categories-container");
     if (!container) return;
     const previousPositions = new Map([...container.querySelectorAll(".site-item")].map(item => [item.dataset.itemId, item.getBoundingClientRect()]));
+    resetGlassInteractions();
     container.innerHTML = "";
     repository.categories.forEach(value => container.appendChild(categoryNode(value)));
+    bindGlassInteractions(container);
     requestAnimationFrame(() => {
         container.querySelectorAll(".site-item").forEach(item => {
             const previous = previousPositions.get(item.dataset.itemId);
@@ -36,7 +39,8 @@ function categoryNode(value) {
     block.ondragover = event => { if (Array.from(event.dataTransfer.types).includes("application/x-category")) event.preventDefault(); };
     block.ondrop = event => { const dragged = event.dataTransfer.getData("application/x-category"); if (!dragged || dragged === value.id) return; event.preventDefault(); categories.move(dragged, repository.categories.findIndex(item => item.id === value.id)); rerender(); };
     const header = document.createElement("div"); header.className = "category-header";
-    const title = document.createElement("span"); title.className = "category-title"; title.textContent = value.title || "";
+    const title = document.createElement("span"); title.className = "category-title";
+    const titleLabel = document.createElement("span"); titleLabel.className = "category-title-label"; titleLabel.textContent = value.title || ""; title.appendChild(titleLabel);
     title.ondblclick = () => openModal("EDIT_CATEGORY", { catId: value.id });
     title.oncontextmenu = event => { event.preventDefault(); openModal("EDIT_CATEGORY", { catId: value.id }); };
     header.appendChild(title); block.appendChild(header);

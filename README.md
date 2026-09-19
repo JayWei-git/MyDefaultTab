@@ -11,6 +11,8 @@ Chrome New Tab extension with independent navigation spaces and local video/imag
 - `src/wallpaper.js` — media discovery, double-buffer transitions, and playback.
 - `src/wallpaper-strategies.js` — wallpaper ordering strategy registry.
 - `src/ui.js` — DOM rendering and event wiring.
+- `src/glass.js` — reusable hover lenses for real edge refraction.
+- `src/vendor/liquid-glass.js` — vendored MIT liquid-glass displacement engine.
 
 ## Adding a wallpaper ordering strategy
 
