@@ -17,7 +17,9 @@ export class WallpaperManager {
     get currentNumber() { return this.backgrounds[this.index]?.number ?? null; }
     async pickNext(strategy = this.strategy) { const value = wallpaperStrategies[strategy]; return value && this.modes.length ? value.pick(this.modes, this.index) : { mode: "", index: -1 }; }
     async nextForPreload() { if (this.strategy === "sequential") { const index = (this.index + 1) % this.modes.length; return { mode: this.modes[index], index }; } return this.pickNext("random"); }
-    async setByNumber(number) { const background = this.backgrounds.find(item => item.number === number); if (!background) return false; this.strategy = "manual"; chrome.storage.local.set({ [WALLPAPER_STRATEGY_KEY]: "manual", [WALLPAPER_KEY]: background.mode }); return this.set(background.mode, { persist: false }); }
+    stopPreload() { ++this.preloadToken; if (this.preloaded) this.releaseLayer(this.preloaded.layer); this.preloaded = null; }
+    fixCurrent() { const background = this.backgrounds[this.index]; if (!background) return false; this.strategy = "manual"; this.stopPreload(); chrome.storage.local.set({ [WALLPAPER_STRATEGY_KEY]: "manual", [WALLPAPER_KEY]: background.mode }); return true; }
+    async setByNumber(number) { const background = this.backgrounds.find(item => item.number === number); if (!background) return false; this.strategy = "manual"; this.stopPreload(); chrome.storage.local.set({ [WALLPAPER_STRATEGY_KEY]: "manual", [WALLPAPER_KEY]: background.mode }); return this.set(background.mode, { persist: false }); }
     releaseLayer(index) { const layer = this.layer(index); const video = layer?.querySelector("video"); const image = layer?.querySelector("img"); if (video) { video.pause(); video.removeAttribute("src"); video.load(); } if (image) image.removeAttribute("src"); }
     async prepareLayer(index, background) {
         this.releaseLayer(index); const layer = this.layer(index); const video = layer?.querySelector("video"); const image = layer?.querySelector("img"); if (!layer || !background) return false;
@@ -30,7 +32,7 @@ export class WallpaperManager {
         const pick = await this.nextForPreload(); if (!pick.mode || pick.mode === this.modes[this.index]) return;
         const token = ++this.preloadToken; const layer = 1 - this.activeLayer; this.releaseLayer(layer); const background = this.backgrounds.find(item => item.mode === pick.mode); const promise = this.prepareLayer(layer, background);
         this.preloaded = { mode: pick.mode, layer, promise, token }; const ready = await promise;
-        if (!ready && this.preloaded?.token === token) { this.preloaded = null; this.releaseLayer(layer); }
+        if (!ready || this.preloaded?.token !== token) { if (this.preloaded?.token === token) this.preloaded = null; this.releaseLayer(layer); }
     }
     async set(mode, { persist = true } = {}) {
         const background = this.backgrounds.find(item => item.mode === mode); if (!background) return false;
